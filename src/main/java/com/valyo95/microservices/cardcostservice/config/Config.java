@@ -1,4 +1,4 @@
-package com.valyo95.microservices.cardcostservice;
+package com.valyo95.microservices.cardcostservice.config;
 
 import com.valyo95.microservices.cardcostservice.entity.CountryClearingCost;
 import com.valyo95.microservices.cardcostservice.repository.CountryClearingCostRepository;

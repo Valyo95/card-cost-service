@@ -1,0 +1,15 @@
+version: '3.0'
+
+services:
+  # SOFTWARE
+  service-registry:
+    image: valyo95/microservices/card-cost-service:0.0.1-SNAPSHOT
+    expose:
+      - 8761
+    ports:
+      - "${CARD_COST_SERVICE_PORT}:8080"
+    logging:
+      driver: "json-file"
+      options:
+        max-file: ${LOGGING_MAX_FILE}
+        max-size: ${LOGGING_MAX_SIZE}

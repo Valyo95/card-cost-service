@@ -14,7 +14,7 @@
     <artifactId>card-cost-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>card-cost-service</name>
-    <description>Demo project for Spring Boot</description>
+    <description>Card Cost Service</description>
 
     <properties>
         <java.version>11</java.version>
@@ -32,6 +32,10 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
         <dependency>
@@ -42,7 +46,7 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.12.0</version>
+            <version>3.11</version>
         </dependency>
 
         <dependency>
