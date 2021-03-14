@@ -7,22 +7,16 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
-import java.util.Date;
+import javax.validation.constraints.PositiveOrZero;
+import java.math.BigDecimal;
 
-/**
- * A simple class representing an error
- */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class ErrorDetails implements Serializable {
-    @JsonProperty("error")
-    private String error;
-    @JsonProperty("timestamp")
-    private Date timestamp;
-    @JsonProperty("details")
-    private String details;
+public class ClearingCost {
+    @JsonProperty("cost")
+    @PositiveOrZero
+    private BigDecimal cost;
 }

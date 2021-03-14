@@ -3,14 +3,14 @@ server:
 
 binlist:
   api:
+    # in milliseconds
+    # default value: 86400000 ms = 1 day
+    clearBinCacheInterval: 86400000
     lookup:
       url: https://lookup.binlist.net/
 
 card-cost:
   defaultClearingCost: 10
-  # in milliseconds
-  # default value: 86400000 ms = 1 day
-  clearBinResponseCacheInterval: 86400000
 
 spring:
   application:

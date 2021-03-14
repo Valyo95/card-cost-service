@@ -17,11 +17,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 // Clear the application context in each test in order to clear the DB
 // This thus makes IT test slower as the application context is reloaded on each test
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+//@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(classes = CardCostServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CountryClearingCostControllerΙΤ {
-    @Autowired
-    private TestRestTemplate restTemplate;
+
+    private final TestRestTemplate restTemplate = new TestRestTemplate("user", "user");
 
     @LocalServerPort
     private int port;
@@ -59,7 +59,7 @@ class CountryClearingCostControllerΙΤ {
     }
 
     @Test
-    void testSave_BG() {
+    void testCreate_BG() {
         // Given
         CountryClearingCost countryClearingCost = new CountryClearingCost("BG", BigDecimal.valueOf(30));
 

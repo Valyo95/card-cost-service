@@ -61,6 +61,7 @@ public class CountryClearingCostService {
     }
 
     public void setDefaultClearingCost(BigDecimal defaultClearingCost) {
+        log.info("Setting the default clearing cost to: {}", defaultClearingCost);
         this.defaultClearingCost = defaultClearingCost;
     }
 

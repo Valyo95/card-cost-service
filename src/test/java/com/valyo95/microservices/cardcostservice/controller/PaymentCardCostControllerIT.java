@@ -19,17 +19,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 // Clear the application context in each test in order to clear the DB
 // This thus makes IT test slower as the application context is reloaded on each test
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+//@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(classes = CardCostServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class PaymentCardCostControllerTest {
+class PaymentCardCostControllerIT {
 
     private final String BG_BIN = "404256";
     private final String GR_BIN = "407534";
-    private final String USA_BIN = "300027";
+    private final String US_BIN = "300027";
     private final String NON_EXISTING_BIN = "003003";
 
-    @Autowired
-    private TestRestTemplate restTemplate;
+    private final TestRestTemplate restTemplate = new TestRestTemplate("user", "user");
 
     @LocalServerPort
     private int port;
@@ -56,10 +55,10 @@ class PaymentCardCostControllerTest {
     }
 
     @Test
-    void testGetClearingCostForCardNumber_USA_BIN() {
+    void testGetClearingCostForCardNumber_US_BIN() {
         // Given
-        // GR clearing cost loaded by default into the DB
-        CardNumber cardNumber = new CardNumber(USA_BIN + RandomStringUtils.randomNumeric(10));
+        // US clearing cost loaded by default into the DB
+        CardNumber cardNumber = new CardNumber(US_BIN + RandomStringUtils.randomNumeric(10));
 
         // When
         ResponseEntity<CountryClearingCost> countryClearingCostResponseEntity = restTemplate.postForEntity(getRootUrl() + "/payment-cards-cost", cardNumber, CountryClearingCost.class);
@@ -75,7 +74,6 @@ class PaymentCardCostControllerTest {
     @Test
     void testGetClearingCostForCardNumber_BG_BIN() {
         // Given
-        // GR clearing cost loaded by default into the DB
         CardNumber cardNumber = new CardNumber(BG_BIN + RandomStringUtils.randomNumeric(10));
 
         // When
@@ -92,7 +90,6 @@ class PaymentCardCostControllerTest {
     @Test
     void testGetClearingCostForCardNumber_NON_EXISTING_BIN() {
         // Given
-        // GR clearing cost loaded by default into the DB
         CardNumber cardNumber = new CardNumber(NON_EXISTING_BIN + RandomStringUtils.randomNumeric(10));
 
         // When
