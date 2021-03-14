@@ -5,6 +5,9 @@ import lombok.Getter;
 
 import java.util.Date;
 
+/**
+ * A simple class representing an error
+ */
 @Data
 @Getter
 public class ErrorDetails {

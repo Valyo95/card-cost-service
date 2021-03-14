@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Country {
     //error message
-    public String message() default "not a valid country";
+    public String message() default "not a valid country code";
 
     //represents group of constraints
     public Class<?>[] groups() default {};

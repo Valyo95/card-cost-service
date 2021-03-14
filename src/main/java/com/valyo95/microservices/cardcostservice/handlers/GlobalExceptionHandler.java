@@ -18,12 +18,17 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    /**
+     * Exception handler used specifically for validation errors
+     * @param ex the exception
+     * @param request the request
+     * @return
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> resourceNotFoundException(MethodArgumentNotValidException ex, WebRequest request) {
-
+    public ResponseEntity<?> validationErrorExceptionHandler(MethodArgumentNotValidException ex, WebRequest request) {
         List<String> errors = new ArrayList<String>();
         for (FieldError error : ex.getBindingResult().getFieldErrors()) {
-            errors.add(error.getField() + " " + error.getDefaultMessage());
+            errors.add(error.getRejectedValue() + " " + error.getDefaultMessage());
         }
         for (ObjectError error : ex.getBindingResult().getGlobalErrors()) {
             errors.add(error.getObjectName() + " " + error.getDefaultMessage());
@@ -36,10 +41,15 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
 
-//    @ExceptionHandler(WebExchangeBindException::class)
-//    fun handleWebExchangeBindException(e: WebExchangeBindException): HttpStatus {
-//        throw object : WebExchangeBindException(e.methodParameter!!, e.bindingResult) {
-//            override val message = "${fieldError?.field} has invalid value '${fieldError?.rejectedValue}'"
-//        }
-//    }
+    /**
+     * General exception handler for all kind of exceptions
+     * @param ex the exception
+     * @param request the request
+     * @return
+     */
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<?> binApiClientExceptionHandler(Exception ex, WebRequest request) {
+        ErrorDetails errorDetails = new ErrorDetails(ex.getMessage(), new Date(), request.getDescription(false));
+        return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

@@ -19,7 +19,7 @@ public class CountryValidator implements ConstraintValidator<Country, String> {
 
     @Override
     public boolean isValid(String code, ConstraintValidatorContext constraintValidatorContext) {
-        return countryCodes.contains(code);
+        return countryCodes.contains(code.toUpperCase());
     }
 
 }

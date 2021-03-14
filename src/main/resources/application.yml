@@ -1,7 +1,13 @@
 server:
   port: 8080
 
+binlist:
+  api:
+    lookup:
+      url: https://lookup.binlist.net/
+
 card-cost:
+  defaultClearingCost: 10
   # in milliseconds
   # default value: 86400000 ms = 1 day
   clearBinResponseCacheInterval: 86400000
@@ -9,6 +15,10 @@ card-cost:
 spring:
   application:
     name: card-cost-service
+  data:
+    rest:
+      base-path: /api
+
   datasource:
     driver-class-name: org.h2.Driver
     password: ''
@@ -20,7 +30,7 @@ spring:
       path: /h2
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     properties:
       hibernate:
 #        format_sql: true

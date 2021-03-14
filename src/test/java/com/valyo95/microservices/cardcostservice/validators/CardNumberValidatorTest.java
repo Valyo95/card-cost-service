@@ -1,7 +1,6 @@
-package com.valyo95.microservices.cardcostservice.util;
+package com.valyo95.microservices.cardcostservice.validators;
 
 
-import com.valyo95.microservices.cardcostservice.validators.CardNumberValidator;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

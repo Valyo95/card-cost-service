@@ -8,6 +8,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+/**
+ * The json representation of the card number
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 @ToString
