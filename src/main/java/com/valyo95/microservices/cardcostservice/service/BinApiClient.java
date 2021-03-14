@@ -1,11 +1,13 @@
 package com.valyo95.microservices.cardcostservice.service;
 
-import com.valyo95.microservices.cardcostservice.dto.CardNumber;
 import com.valyo95.microservices.cardcostservice.dto.binapi.BinLookupResponse;
 import com.valyo95.microservices.cardcostservice.exceptions.BinApiClientException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -14,20 +16,27 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class BinApiClient {
 
-    @Value("${binlist.api.lookup.url}")
-    private String binlistURL;
+    private final String binlistURL;
 
     private final RestTemplate restTemplate;
 
-    public BinApiClient(RestTemplate restTemplate) {
+    public BinApiClient(@Value("${binlist.api.lookup.url}") String binlistURL,
+                        RestTemplate restTemplate) {
+        this.binlistURL = binlistURL;
         this.restTemplate = restTemplate;
     }
 
-    public BinLookupResponse getBinLookupResponse(CardNumber cardNumber) throws BinApiClientException {
-        String bin = getBINFromCardNumber(cardNumber);
-        BinLookupResponse binLookupResponse = null;
+    /**
+     * The method makes a call to the Bin API to retrieve a BinLookup response.
+     * In order to minimize the calls a caching mechanism is added to cache each
+     * of the bin responses
+     * @param bin
+     * @return
+     */
+    @Cacheable("BIN")
+    public BinLookupResponse getBinLookupResponse(String bin) {
         try {
-            binLookupResponse = restTemplate.getForObject(binlistURL + "/" + bin, BinLookupResponse.class);
+            return restTemplate.getForObject(binlistURL + "/" + bin, BinLookupResponse.class);
         } catch (HttpClientErrorException e) {
             String errorMessage;
             if(e.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
@@ -38,12 +47,14 @@ public class BinApiClient {
             log.error(errorMessage);
             throw new BinApiClientException(errorMessage, e);
         }
-        return binLookupResponse;
     }
 
-    private String getBINFromCardNumber(CardNumber cardNumber) {
-        return cardNumber.getPan().substring(0, 6);
+    /**
+     * Evicting the BIN cache
+     */
+    @Scheduled(fixedRateString = "${binlist.api.clearBinCacheInterval}")
+    @CacheEvict(value = "BIN", allEntries = true)
+    public void clearCache() {
+        log.info("Clearing BIN cache");
     }
-    
-
 }
