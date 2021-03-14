@@ -30,6 +30,7 @@ public class BinApiClient {
      * The method makes a call to the Bin API to retrieve a BinLookup response.
      * In order to minimize the calls a caching mechanism is added to cache each
      * of the bin responses
+     *
      * @param bin
      * @return
      */
@@ -39,7 +40,7 @@ public class BinApiClient {
             return restTemplate.getForObject(binlistURL + "/" + bin, BinLookupResponse.class);
         } catch (HttpClientErrorException e) {
             String errorMessage;
-            if(e.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
+            if (e.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
                 errorMessage = "BIN: `" + bin + "` not found in BinList API";
             } else {
                 errorMessage = "BinList Server Error";

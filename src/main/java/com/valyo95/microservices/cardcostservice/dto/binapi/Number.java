@@ -20,8 +20,8 @@ import lombok.ToString;
 public class Number {
 
     @JsonProperty("length")
-    public Integer length;
+    private Integer length;
     @JsonProperty("luhn")
-    public Boolean luhn;
+    private Boolean luhn;
 
 }

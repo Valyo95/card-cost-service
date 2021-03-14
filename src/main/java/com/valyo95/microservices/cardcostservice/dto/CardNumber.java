@@ -20,5 +20,5 @@ public class CardNumber {
 
     @JsonProperty("card_number")
     @Pan
-    public String pan;
+    private String pan;
 }

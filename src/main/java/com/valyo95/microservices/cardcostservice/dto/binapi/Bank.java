@@ -22,12 +22,12 @@ import lombok.ToString;
 public class Bank {
 
     @JsonProperty("name")
-    public String name;
+    private String name;
     @JsonProperty("url")
-    public String url;
+    private String url;
     @JsonProperty("phone")
-    public String phone;
+    private String phone;
     @JsonProperty("city")
-    public String city;
+    private String city;
 
 }

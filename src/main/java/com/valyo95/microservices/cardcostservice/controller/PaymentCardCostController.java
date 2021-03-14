@@ -31,7 +31,7 @@ public class PaymentCardCostController {
 
     @PostMapping
     public ResponseEntity<CountryClearingCost> getClearingCostForCardNumber(@Valid @RequestBody CardNumber cardNumber) {
-        BinLookupResponse binLookupResponse = binApiClient.getBinLookupResponse(cardNumber);
+        BinLookupResponse binLookupResponse = binApiClient.getBinLookupResponse(getBINFromCardNumber(cardNumber));
         String alpha2Code = binLookupResponse.getCountry().getAlpha2();
 
         CountryClearingCost countryClearingCost;
@@ -42,6 +42,10 @@ public class PaymentCardCostController {
             countryClearingCost = new CountryClearingCost(alpha2Code, countryClearingCostService.getDefaultClearingCost());
         }
         return ResponseEntity.ok(countryClearingCost);
+    }
+
+    private String getBINFromCardNumber(CardNumber cardNumber) {
+        return cardNumber.getPan().substring(0, 6);
     }
 
 }

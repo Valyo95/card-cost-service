@@ -25,18 +25,18 @@ import lombok.ToString;
 public class BinLookupResponse {
 
     @JsonProperty("number")
-    public Number number;
+    private Number number;
     @JsonProperty("scheme")
-    public String scheme;
+    private String scheme;
     @JsonProperty("type")
-    public String type;
+    private String type;
     @JsonProperty("brand")
-    public String brand;
+    private String brand;
     @JsonProperty("prepaid")
-    public Boolean prepaid;
+    private Boolean prepaid;
     @JsonProperty("country")
-    public Country country;
+    private Country country;
     @JsonProperty("bank")
-    public Bank bank;
+    private Bank bank;
 
 }

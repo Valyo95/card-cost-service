@@ -9,25 +9,25 @@ class CountryValidatorTest {
     private final CountryValidator countryValidator = new CountryValidator();
 
     @Test
-    public void testInvalid_empty(){
+    public void testInvalid_empty() {
         boolean valid = countryValidator.isValid("", null);
         assertThat(valid).isFalse();
     }
 
     @Test
-    public void testInvalid_invalid(){
+    public void testInvalid_invalid() {
         boolean valid = countryValidator.isValid("greece", null);
         assertThat(valid).isFalse();
     }
 
     @Test
-    public void testInvalid_nonExisting(){
+    public void testInvalid_nonExisting() {
         boolean valid = countryValidator.isValid("Ellada", null);
         assertThat(valid).isFalse();
     }
 
     @Test
-    public void testValid(){
+    public void testValid() {
         boolean valid = countryValidator.isValid("GR", null);
         assertThat(valid).isTrue();
     }

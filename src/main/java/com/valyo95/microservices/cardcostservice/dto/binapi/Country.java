@@ -25,18 +25,18 @@ import lombok.ToString;
 public class Country {
 
     @JsonProperty("numeric")
-    public String numeric;
+    private String numeric;
     @JsonProperty("alpha2")
-    public String alpha2;
+    private String alpha2;
     @JsonProperty("name")
-    public String name;
+    private String name;
     @JsonProperty("emoji")
-    public String emoji;
+    private String emoji;
     @JsonProperty("currency")
-    public String currency;
+    private String currency;
     @JsonProperty("latitude")
-    public Integer latitude;
+    private Integer latitude;
     @JsonProperty("longitude")
-    public Integer longitude;
+    private Integer longitude;
 
 }

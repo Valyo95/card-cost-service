@@ -20,7 +20,8 @@ public class GlobalExceptionHandler {
 
     /**
      * Exception handler used specifically for validation errors
-     * @param ex the exception
+     *
+     * @param ex      the exception
      * @param request the request
      * @return
      */
@@ -43,7 +44,8 @@ public class GlobalExceptionHandler {
 
     /**
      * General exception handler for all kind of exceptions
-     * @param ex the exception
+     *
+     * @param ex      the exception
      * @param request the request
      * @return
      */
