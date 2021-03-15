@@ -24,10 +24,11 @@
 The **Card Cost Service** provides with a simple CRUD operation for creating, retrieving, updating and deleting
 a [CountryClearingCost](src/main/java/com/valyo95/microservices/cardcostservice/entity/CountryClearingCost.java) records.
 
-#### CountryClearingCost
 ```
-- countryCode : an ISO 3166-1 alpha-2 code (two-letter country code)
-- cost        : Positive decimal that show the clearing cost of the country
+CountryClearingCost {
+  - countryCode : an ISO 3166-1 alpha-2 code (two-letter country code)
+  - cost        : Positive decimal that show the clearing cost of the country
+}
 ```
 
 Currently, the Country Clearing Cost does not contain any information about the cost's currency.
@@ -123,6 +124,27 @@ can be found under the [db/migration](src/main/resources/db/migration) folder.
 They are used in order to create the db schema and load the initial data into the db.
 
 ---
+
+## Error Handling
+The application uses Exception Handling with Spring for the REST API.
+
+There are twp different Exception Handlers defined.
+
+One for the validation exceptions which produce more user-friendly error message and one for
+all other exceptions. More info can be found here: [ExceptionHandlers.java](src/main/java/com/valyo95/microservices/cardcostservice/handlers/ExceptionHandlers.java)
+
+A special domain class called **ErrorDetails** is created for handling error which is returned in the response.
+The ErrorDetails contains the following field:
+```
+ErrorDetails {
+  - error       : the error message
+  - timestamp   : the timesamp of the error
+  - details     : details around the request
+}
+```
+
+---
+
 
 ## Application security
 The **Card Cost Service** is secured by the [Spring Security](https://spring.io/projects/spring-security) and required

@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
-public class GlobalExceptionHandler {
+public class ExceptionHandlers {
 
     /**
      * Exception handler used specifically for validation errors
