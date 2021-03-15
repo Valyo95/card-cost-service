@@ -164,7 +164,7 @@ For more info check the [SecurityConfig.java](src/main/java/com/valyo95/microser
 ## Unit & Integration Testing
 Both unit & integration test are written in order to ensure the correct business logic and code execution.
 
-They are added in the CI/CD GitHub Action's pipeline to ensure that a Green Builds does not have broken tests.
+They are added in the CI/CD GitHub Action's pipeline as seperate steps to ensure that a Green Builds does not have broken tests.
 
 ## Containerization and docker-environment
 Each time the application is built a Docker image is created 
@@ -182,4 +182,20 @@ OpenAPI 3 specification docs for the Rest API.
 Once the application is started you can find the documentation under `/swagger-ui.html` and it will display something like this
 ![open-api-docs](docs/open-api-docs.png)
 
+## GitHub Actions CI/CD
+The project has its own pipeline configured with the [GitHub Actions](https://github.com/features/actions).
+
+You can find the pipeline's configuration file in the [maven.yml](.github/workflows/maven.yml).
+
+It consists of the following steps:
+1. Build
+2. Unit Tests
+3. Integration Tests
+4. Static Code Analysis (using Sonar Cloud)
+
+This workflow/pipeline ensures:
+* Green Builds
+* Successful unit & integration tests executions
+* Clean and safe code standards by using SonarCloud
+* Test coverage with JaCoCo
 
