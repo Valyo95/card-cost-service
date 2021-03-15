@@ -6,9 +6,11 @@ import lombok.*;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.constraints.DecimalMin;
 import java.math.BigDecimal;
 
+@Table(name = "country_clearing_cost")
 @Entity
 @Data
 @AllArgsConstructor

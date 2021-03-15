@@ -111,6 +111,18 @@ by overwriting the `binlist.api.clearBinCacheInterval` property.
 
 ---
 
+## Database creation and migration
+The database that the application uses is an H2 in-memory DB.
+
+The application uses [Flyway](https://flywaydb.org/) in order to do any db migrations.
+
+This configuration is set in the [application.yml](src/main/resources/application.yml) and all the migration scripts
+can be found under the [db/migration](src/main/resources/db/migration) folder.
+
+They are used in order to create the db schema and load the initial data into the db.
+
+---
+
 ## Application security
 The **Card Cost Service** is secured by the [Spring Security](https://spring.io/projects/spring-security) and required
 a basic authentication that uses a *username* and a *password* to authenticate.
@@ -123,3 +135,17 @@ Two default users are programmatically configured:
 | admin    | admin    | ADMIN |
 
 For more info check the [SecurityConfig.java](src/main/java/com/valyo95/microservices/cardcostservice/config/SecurityConfig.java).
+
+---
+
+## Unit & Integration Testing
+Both unit & integration test are written in order to ensure the correct business logic and code execution.
+
+They are added in the CI/CD GitHub Action's pipeline to ensure that a Green Builds does not have broken tests.
+
+## Containerization and docker-environment
+Each time the application is built a Docker image is created 
+The app is configured to produce a docker image by using the [dockerfile-maven-plugin](https://github.com/spotify/dockerfile-maven),
+that can be used to run the app directly.
+
+There also exists a [docker-compose](docker-compose.yml) environment to make this process even easier.

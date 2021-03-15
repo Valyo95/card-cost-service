@@ -27,15 +27,21 @@ spring:
   h2:
     console:
       enabled: true
-      path: /h2
+      path: /h2-console
   jpa:
-    hibernate:
-      ddl-auto: create-drop
+#    hibernate:
+#      ddl-auto: create-drop
     properties:
       hibernate:
 #        format_sql: true
 #        generate_statistics: true
-        jdbc:
-          batch_size: 10
+#        jdbc:
+#          batch_size: 10
     database-platform: org.hibernate.dialect.H2Dialect
 #    show-sql: true
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    sql-migration-prefix: V
+    sql-migration-separator: __
+    sql-migration-suffixes: .sql

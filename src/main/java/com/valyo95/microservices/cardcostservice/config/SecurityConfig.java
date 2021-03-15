@@ -34,6 +34,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        // needed in order to show the h2-console
+        http.headers().frameOptions().disable();
         http.csrf().disable().authorizeRequests()
                 // only an user with the ADMIN role can change the default clearing cost
                 .antMatchers(HttpMethod.POST, "/admin/defaultClearingCost").access("hasRole('ADMIN')")
