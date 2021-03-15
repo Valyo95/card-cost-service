@@ -14,6 +14,7 @@ import java.util.List;
 @Service
 public class CountryClearingCostService {
 
+    private final String COUNTRY_COST_NOT_FOUND = "Country clearing cost not found for country code: ";
     @Value("${card-cost.defaultClearingCost}")
     private BigDecimal defaultClearingCost;
 
@@ -30,7 +31,7 @@ public class CountryClearingCostService {
 
     public CountryClearingCost findByCountryCode(String countryCode) {
         return countryClearingCostRepository.findByCountryCodeIgnoreCase(countryCode.toUpperCase())
-                .orElseThrow(() -> new ResourceNotFoundException("Country clearing cost not found for country code: " + countryCode));
+                .orElseThrow(() -> new ResourceNotFoundException(COUNTRY_COST_NOT_FOUND + countryCode));
     }
 
     public List<CountryClearingCost> findAll() {
@@ -39,7 +40,7 @@ public class CountryClearingCostService {
 
     public CountryClearingCost updateCountryClearingCost(String countryCode, CountryClearingCost countryClearingCostDetails) {
         CountryClearingCost countryClearingCost = countryClearingCostRepository.findByCountryCodeIgnoreCase(countryCode)
-                .orElseThrow(() -> new ResourceNotFoundException("Country clearing cost not found for country code: " + countryCode));
+                .orElseThrow(() -> new ResourceNotFoundException(COUNTRY_COST_NOT_FOUND + countryCode));
 
         log.info("Updating CountryClearingCost with countryCode: {}, new values: {}", countryCode, countryClearingCostDetails);
 
@@ -49,7 +50,7 @@ public class CountryClearingCostService {
 
     public CountryClearingCost deleteCountryClearingCost(String countryCode) {
         CountryClearingCost countryClearingCost = countryClearingCostRepository.findByCountryCodeIgnoreCase(countryCode)
-                .orElseThrow(() -> new ResourceNotFoundException("Country clearing cost not found for country code: " + countryCode));
+                .orElseThrow(() -> new ResourceNotFoundException(COUNTRY_COST_NOT_FOUND + countryCode));
 
         log.info("Deleting CountryClearingCost with countryCode: {}", countryCode);
         countryClearingCostRepository.delete(countryClearingCost);

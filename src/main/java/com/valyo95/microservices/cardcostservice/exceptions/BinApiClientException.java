@@ -1,7 +1,5 @@
 package com.valyo95.microservices.cardcostservice.exceptions;
 
-import com.valyo95.microservices.cardcostservice.dto.CardNumber;
-
 /**
  * Custom Exception used whenever
  * the {@link com.valyo95.microservices.cardcostservice.service.BinApiClient#getBinLookupResponse(String)}

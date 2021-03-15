@@ -26,8 +26,8 @@ public class ExceptionHandlers {
      * @return
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> validationErrorExceptionHandler(MethodArgumentNotValidException ex, WebRequest request) {
-        List<String> errors = new ArrayList<String>();
+    public ResponseEntity validationErrorExceptionHandler(MethodArgumentNotValidException ex, WebRequest request) {
+        List<String> errors = new ArrayList<>();
         for (FieldError error : ex.getBindingResult().getFieldErrors()) {
             errors.add(error.getField() + "='" + error.getRejectedValue() + "' " + error.getDefaultMessage());
         }
@@ -50,7 +50,7 @@ public class ExceptionHandlers {
      * @return
      */
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> globalExceptionHandler(Exception ex, WebRequest request) {
+    public ResponseEntity globalExceptionHandler(Exception ex, WebRequest request) {
         ErrorDetails errorDetails = new ErrorDetails(ex.getMessage(), new Date(), request.getDescription(false));
         return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
     }

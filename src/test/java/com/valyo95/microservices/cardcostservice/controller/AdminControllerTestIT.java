@@ -33,7 +33,7 @@ class AdminControllerTestIT {
         Map<String, Object> response = restTemplate.postForObject(getRootUrl() + "/admin/" + "defaultClearingCost", 777, Map.class);
 
         // Then
-        assertThat(response.size()).isGreaterThan(0);
+        assertThat(response.size()).isPositive();
         assertThat(response.get("status")).isEqualTo(403);
         assertThat(response.get("error")).isEqualTo("Forbidden");
     }
