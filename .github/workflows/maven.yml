@@ -30,3 +30,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: mvn -B clean install org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+      
+      - name: Docker Hub Login
+        env:
+          DOCKER_USER: ${{secrets.DOCKER_USER}}
+          DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+        run: |
+          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+
+      - name: Docker Push
+        run: docker push ${{secrets.DOCKER_USER}}/valyo95/microservices/card-cost-service:0.0.1-SNAPSHOT
