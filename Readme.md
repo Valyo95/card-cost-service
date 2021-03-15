@@ -3,7 +3,7 @@
 ## Introduction
 **Card Cost Service** is an application that provides with two functionalities:
 * a REST CRUD operation for the Country Clearing Cost
-* a Service which can be given with a card number that will utilize the information 
+* a Service which can be given with a card number that will utilize the information
   provided by this public API [BinList](https://binlist.net/)
 
 ### Tools used
@@ -39,7 +39,7 @@ The CRUD operations are fully validated with the bean validation support provide
 `spring-boot-starter-validation` dependency.
 
 This means that:
-* **country code** - should be exactly 2 two letter and should be a valid country code 
+* **country code** - should be exactly 2 two letter and should be a valid country code
   (the validation uses the Java's Locale.getISOCountries()) to fetch all the country codes and check if the given **country code**
   is  valid one (see [CountryValidator.java](src/main/java/com/valyo95/microservices/cardcostservice/validators/CountryValidator.java)).
   Also the country code is not case sensitive, so `GR` and `gr` is exactly the same for the CRUD's behaviour.
@@ -76,7 +76,7 @@ It can be found under `/admin/defaultClearingCost` and requires a `POST` with th
 
 #### Domain
 A credit card number is also called PAN.
-The PAN is a 16 digit number displayed on one side of the card. 
+The PAN is a 16 digit number displayed on one side of the card.
 The first 6 digits of a payment card number (credit cards, debit cards, etc.) are known as the Issuer Identification Numbers (IIN), previously known as Bank Identification Number (BIN).
 These identify the institution that issued the card to the card holder.
 
@@ -109,8 +109,8 @@ The BIN information obviously doesn't change frequently. This can be used to red
 
 The **Card Cost Service** does this by caching the Bin Response by using [Spring Cache](https://docs.spring.io/spring-framework/docs/4.3.x/spring-framework-reference/html/cache.html)
 
-The cache is cleared on a specific interval that can be defined by the user in the [application.yml](src/main/resources/application.yml)
-by overwriting the `binlist.api.clearBinCacheInterval` property.
+The cache is set to be cleared each day but the specific interval is configurable and can be changed by the user
+by overwriting the `binlist.api.clearBinCacheInterval` property in the [application.yml](src/main/resources/application.yml).
 
 ---
 
@@ -173,7 +173,7 @@ for both unit and integration test and merge the two reports into one final repo
 This report is later used in the Static Code Analysis in order to pass the Sonar's project Quality Gates.
 
 ## Containerization and docker-environment
-Each time the application is built a Docker image is created 
+Each time the application is built a Docker image is created
 The app is configured to produce a docker image by using the [dockerfile-maven-plugin](https://github.com/spotify/dockerfile-maven),
 that can be used to run the app directly.
 
