@@ -1,5 +1,6 @@
 package com.valyo95.microservices.cardcostservice.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -16,8 +17,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final AuthenticationEntryPoint authEntryPoint;
 
-    public SecurityConfig(AuthenticationEntryPoint authEntryPoint) {
+    private final boolean csrfEnabled;
+
+    public SecurityConfig(AuthenticationEntryPoint authEntryPoint, @Value("${security.enable-csrf}") boolean csrfEnabled) {
         this.authEntryPoint = authEntryPoint;
+        this.csrfEnabled = csrfEnabled;
     }
 
     @Override
@@ -36,7 +40,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         // needed in order to show the h2-console
         http.headers().frameOptions().disable();
-        http.csrf().disable().authorizeRequests()
+
+        http.authorizeRequests()
                 // only an user with the ADMIN role can change the default clearing cost
                 .antMatchers(HttpMethod.POST, "/admin/defaultClearingCost").access("hasRole('ADMIN')")
                 .anyRequest()

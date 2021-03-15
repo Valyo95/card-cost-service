@@ -1,34 +1,25 @@
 package com.valyo95.microservices.cardcostservice.validators;
 
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class CountryValidatorTest {
     private final CountryValidator countryValidator = new CountryValidator();
 
-    @Test
-    void testInvalid_empty() {
-        boolean valid = countryValidator.isValid("", null);
+    @ParameterizedTest
+    @ValueSource(strings = {"", "greece!", "123", "Ellada"})
+    void testInvalid(String countryCode) {
+        boolean valid = countryValidator.isValid(countryCode, null);
         assertThat(valid).isFalse();
     }
 
-    @Test
-    void testInvalid_invalid() {
-        boolean valid = countryValidator.isValid("greece", null);
-        assertThat(valid).isFalse();
-    }
-
-    @Test
-    void testInvalid_nonExisting() {
-        boolean valid = countryValidator.isValid("Ellada", null);
-        assertThat(valid).isFalse();
-    }
-
-    @Test
-    void testValid() {
-        boolean valid = countryValidator.isValid("GR", null);
+    @ParameterizedTest
+    @ValueSource(strings = {"GR", "BG", "US", "AD"})
+    void testValid(String countryCode) {
+        boolean valid = countryValidator.isValid(countryCode, null);
         assertThat(valid).isTrue();
     }
 }
