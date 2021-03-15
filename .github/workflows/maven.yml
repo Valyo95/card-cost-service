@@ -25,12 +25,6 @@ jobs:
         run: mvn -B -DskipITs test
       - name: Integration Tests
         run: mvn test-compile failsafe:integration-test
-      - name: Cache Maven packages
-        uses: actions/cache@v1
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
       - name: Static Code Analysis
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
