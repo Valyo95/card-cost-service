@@ -17,6 +17,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @EqualsAndHashCode
 @ToString
+@Builder
 public class CountryClearingCost {
     @Id
     @Column(name = "country_code", length = 2, updatable = false)

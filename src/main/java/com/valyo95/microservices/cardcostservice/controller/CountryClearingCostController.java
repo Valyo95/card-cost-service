@@ -1,5 +1,6 @@
 package com.valyo95.microservices.cardcostservice.controller;
 
+import com.valyo95.microservices.cardcostservice.dto.CountryClearingCostDTO;
 import com.valyo95.microservices.cardcostservice.entity.CountryClearingCost;
 import com.valyo95.microservices.cardcostservice.service.CountryClearingCostService;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ public class CountryClearingCostController {
     }
 
     @PostMapping
-    public ResponseEntity<CountryClearingCost> save(@Valid @RequestBody CountryClearingCost countryClearingCost) {
+    public ResponseEntity<CountryClearingCost> save(@Valid @RequestBody CountryClearingCostDTO countryClearingCost) {
         CountryClearingCost savedCountryClearingCost = countryClearingCostService.saveCountryClearingCost(countryClearingCost);
         return ResponseEntity.ok(savedCountryClearingCost);
     }
@@ -37,7 +38,7 @@ public class CountryClearingCostController {
     }
 
     @PutMapping("/{countryCode}")
-    public ResponseEntity<CountryClearingCost> update(@PathVariable String countryCode, @Valid @RequestBody CountryClearingCost countryClearingCost) {
+    public ResponseEntity<CountryClearingCost> update(@PathVariable String countryCode, @Valid @RequestBody CountryClearingCostDTO countryClearingCost) {
         CountryClearingCost updatedCountryClearingCost = countryClearingCostService.updateCountryClearingCost(countryCode, countryClearingCost);
         return ResponseEntity.ok(updatedCountryClearingCost);
     }

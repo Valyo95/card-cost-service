@@ -1,5 +1,6 @@
 package com.valyo95.microservices.cardcostservice.service;
 
+import com.valyo95.microservices.cardcostservice.dto.CountryClearingCostDTO;
 import com.valyo95.microservices.cardcostservice.entity.CountryClearingCost;
 import com.valyo95.microservices.cardcostservice.repository.CountryClearingCostRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -24,8 +25,13 @@ public class CountryClearingCostService {
         this.countryClearingCostRepository = countryClearingCostRepository;
     }
 
-    public CountryClearingCost saveCountryClearingCost(CountryClearingCost countryClearingCost) {
-        log.info("Adding new {} in the database.");
+    public CountryClearingCost saveCountryClearingCost(CountryClearingCostDTO countryClearingCostDTO) {
+        CountryClearingCost countryClearingCost = new CountryClearingCost()
+                .builder()
+                .countryCode(countryClearingCostDTO.getCountryCode())
+                .cost(countryClearingCostDTO.getCost())
+                .build();
+        log.info("Adding new {} in the database.", countryClearingCost);
         return countryClearingCostRepository.save(countryClearingCost);
     }
 
@@ -38,13 +44,13 @@ public class CountryClearingCostService {
         return countryClearingCostRepository.findAll();
     }
 
-    public CountryClearingCost updateCountryClearingCost(String countryCode, CountryClearingCost countryClearingCostDetails) {
+    public CountryClearingCost updateCountryClearingCost(String countryCode, CountryClearingCostDTO countryClearingCostDTO) {
         CountryClearingCost countryClearingCost = countryClearingCostRepository.findByCountryCodeIgnoreCase(countryCode)
                 .orElseThrow(() -> new ResourceNotFoundException(COUNTRY_COST_NOT_FOUND + countryCode));
 
-        log.info("Updating CountryClearingCost with countryCode: {}, new values: {}", countryCode, countryClearingCostDetails);
+        log.info("Updating CountryClearingCost with countryCode: {}, new values: {}", countryCode, countryClearingCostDTO);
 
-        countryClearingCost.setCost(countryClearingCostDetails.getCost());
+        countryClearingCost.setCost(countryClearingCostDTO.getCost());
         return countryClearingCostRepository.save(countryClearingCost);
     }
 
