@@ -9,10 +9,12 @@
 ### Tools used
 * Java 11
 * Maven
-* Spring (Security, Validation & Caching) and SpringBoot
+* Spring (Web, Security, Validation, Caching & Scheduling) and SpringBoot
 * Hibernate & SpringData
-* H2 Database (in-memory)
+* Flyway & H2 Database (in-memory)
 * JUnit 5 Unit & Integration Tests
+* OpenApi-Swagger Docs
+* Markdown (for this Readme)
 * Docker containerization and a docker-compose environment
 * GitHub Action CI/CD
 
@@ -41,7 +43,7 @@ This means that:
   Also the country code is not case sensitive, so `GR` and `gr` is exactly the same for the CRUD's behaviour.
 * **cost** - should be a zero or positive decimal number
 
-A set of records is automatically loaded into the database when the application starts
+A set of records is automatically loaded into the database when the application starts by using flyway migration
 
 | Card issuing country | Clearing Cost |
 |----------------------|---------------|
@@ -49,7 +51,6 @@ A set of records is automatically loaded into the database when the application 
 | GR                   | 15            |
 
 The endpoint can be found under the `/country-cost` path.
-
 
 #### Default Clearing Cost Value
 There also exists a default clearing cost value for all the other countries that are not configured in the database.
@@ -84,7 +85,7 @@ calls the public [Binlist API](https://binlist.net/) to get the Bin information 
 of the card.
 
 The card clearing cost calculation is depicted in the following diagram:
-![GDM-it framework](docs/card-cost-api.jpg)
+![card-cost-diagram](docs/card-cost-api.jpg)
 
 The **Card Cost Service** API can be found under `/payment-cards-cost` and supports with the following action:
 a POST on `/payment-cards-cost` of the following JSON:
@@ -149,3 +150,14 @@ The app is configured to produce a docker image by using the [dockerfile-maven-p
 that can be used to run the app directly.
 
 There also exists a [docker-compose](docker-compose.yml) environment to make this process even easier.
+
+## OpenApi - Swagger documentation
+Documentation is an essential part of building REST APIs.
+
+That's why the application uses the [OpenAPI](https://swagger.io/specification/) specification to generate
+OpenAPI 3 specification docs for the Rest API.
+
+Once the application is started you can find the documentation under `/swagger-ui.html` and it will display something like this
+![open-api-docs](docs/open-api-docs.png)
+
+
