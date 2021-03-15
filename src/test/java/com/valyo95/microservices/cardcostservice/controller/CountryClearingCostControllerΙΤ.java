@@ -4,18 +4,23 @@ import com.valyo95.microservices.cardcostservice.CardCostServiceApplication;
 import com.valyo95.microservices.cardcostservice.dto.ErrorDetails;
 import com.valyo95.microservices.cardcostservice.entity.CountryClearingCost;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 // Clear the application context in each test in order to clear the DB
 // This thus makes IT test slower as the application context is reloaded on each test
-//@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(classes = CardCostServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CountryClearingCostControllerΙΤ {
 
@@ -57,9 +62,22 @@ class CountryClearingCostControllerΙΤ {
     }
 
     @Test
+    void testGetAll() {
+        // Given
+        String countryCode = "undefined";
+
+        // When
+        List<CountryClearingCost> error = restTemplate.getForObject(getRootUrl() + "/country-cost", List.class);
+
+        // Then
+        assertThat(error).hasSize(2);
+    }
+
+    @Test
     void testCreate_BG() {
         // Given
-        CountryClearingCost countryClearingCost = new CountryClearingCost("BG", BigDecimal.valueOf(30));
+        String countryCode = "BG";
+        CountryClearingCost countryClearingCost = new CountryClearingCost(countryCode, BigDecimal.valueOf(30));
 
         // When
         ResponseEntity<CountryClearingCost> countryClearingCostResponseEntity = restTemplate.postForEntity(getRootUrl() + "/country-cost", countryClearingCost, CountryClearingCost.class);
@@ -70,6 +88,9 @@ class CountryClearingCostControllerΙΤ {
         CountryClearingCost body = countryClearingCostResponseEntity.getBody();
         assertThat(body.getCountryCode()).isEqualTo("BG");
         assertThat(body.getCost()).isEqualByComparingTo(BigDecimal.valueOf(30));
+
+        // Delete record
+        restTemplate.delete(getRootUrl() + "/country-cost/" + countryCode);
     }
 
     @Test
@@ -88,6 +109,30 @@ class CountryClearingCostControllerΙΤ {
         // Then
         assertThat(newCountryClearingCost.getCountryCode()).isEqualTo(countryCode);
         assertThat(newCountryClearingCost.getCost()).isEqualByComparingTo(BigDecimal.valueOf(777));
+
+        // Delete record
+        restTemplate.delete(getRootUrl() + "/country-cost/" + countryCode);
+    }
+
+    @Test
+    void testUpdate_NonExisting() {
+        // Given
+        String countryCode = "AF";
+        CountryClearingCost countryClearingCost = new CountryClearingCost(countryCode, BigDecimal.valueOf(30));
+
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add("Content-Type", "application/json");
+        HttpEntity httpEntity = new HttpEntity<Object>(countryClearingCost, headers);
+
+        // When
+        countryClearingCost = new CountryClearingCost(countryCode, BigDecimal.valueOf(777));
+
+        ResponseEntity<ErrorDetails> errorDetailsResponseEntity = restTemplate.exchange(getRootUrl() + "/country-cost/" + countryCode, HttpMethod.PUT, httpEntity, ErrorDetails.class);
+        ErrorDetails error = errorDetailsResponseEntity.getBody();
+
+        // Then
+        assertThat(error).isNotNull();
+        assertThat(error.getError()).contains("Country clearing cost not found for country code");
     }
 
     @Test
@@ -106,5 +151,24 @@ class CountryClearingCostControllerΙΤ {
         // Then
         assertThat(error).isNotNull();
         assertThat(error.getError()).contains("Country clearing cost not found for country code: " + countryCode);
+    }
+
+    @Test
+    void testDelete_NonExistent() {
+        // Given
+        String countryCode = "AF";
+
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add("Content-Type", "application/json");
+        HttpEntity httpEntity = new HttpEntity<>(null, headers);
+        
+        // When
+        ResponseEntity<ErrorDetails> errorDetailsResponseEntity = restTemplate.exchange(getRootUrl() + "/country-cost/" + countryCode, HttpMethod.DELETE, httpEntity, ErrorDetails.class);
+
+        ErrorDetails error = errorDetailsResponseEntity.getBody();
+
+        // Then
+        assertThat(error).isNotNull();
+        assertThat(error.getError()).contains("Country clearing cost not found for country code");
     }
 }
