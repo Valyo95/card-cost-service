@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import java.math.BigDecimal;
 import java.util.Map;
 
+import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = CardCostServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -34,8 +35,8 @@ class AdminControllerTestIT {
 
         // Then
         assertThat(response.size()).isPositive();
-        assertThat(response.get("status")).isEqualTo(403);
-        assertThat(response.get("error")).isEqualTo("Forbidden");
+        assertThat(response).containsEntry("status", 403);
+        assertThat(response).containsEntry("error", "Forbidden");
     }
 
     @Test

@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 // Clear the application context in each test in order to clear the DB
 // This thus makes IT test slower as the application context is reloaded on each test
 @SpringBootTest(classes = CardCostServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class CountryClearingCostControllerΙΤ {
+class CountryClearingCostControllerIT {
 
     private final TestRestTemplate restTemplate = new TestRestTemplate("user", "user");
 

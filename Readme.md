@@ -13,9 +13,10 @@
 * Hibernate & SpringData
 * Flyway & H2 Database (in-memory)
 * JUnit 5 Unit & Integration Tests
-* OpenApi-Swagger Docs
 * Markdown (for this Readme)
+* OpenApi-Swagger Docs
 * Docker containerization and a docker-compose environment
+* SonarQube (SonarCloud) for Static Code Analysis
 * GitHub Action CI/CD
 
 ---
@@ -115,12 +116,12 @@ by overwriting the `binlist.api.clearBinCacheInterval` property.
 
 ## Database creation and migration
 The database that the application uses is an H2 in-memory DB.
+The H2 in-memory db can be accessed once the application has started under the `/h2-console` url.
 
 The application uses [Flyway](https://flywaydb.org/) in order to do any db migrations.
 
 This configuration is set in the [application.yml](src/main/resources/application.yml) and all the migration scripts
 can be found under the [db/migration](src/main/resources/db/migration) folder.
-
 They are used in order to create the db schema and load the initial data into the db.
 
 ---
@@ -166,6 +167,11 @@ Both unit & integration test are written in order to ensure the correct business
 
 They are added in the CI/CD GitHub Action's pipeline as seperate steps to ensure that a Green Builds does not have broken tests.
 
+The [JaCoCo](https://www.eclemma.org/jacoco/) library is being used to produce a test coverage report
+for both unit and integration test and merge the two reports into one final report.
+
+This report is later used in the Static Code Analysis in order to pass the Sonar's project Quality Gates.
+
 ## Containerization and docker-environment
 Each time the application is built a Docker image is created 
 The app is configured to produce a docker image by using the [dockerfile-maven-plugin](https://github.com/spotify/dockerfile-maven),
@@ -199,3 +205,4 @@ This workflow/pipeline ensures:
 * Clean and safe code standards by using SonarCloud
 * Test coverage with JaCoCo
 
+The Static Code Analysis of the project can be found at: [https://sonarcloud.io/dashboard?id=Valyo95_card-cost-service&branch=master](https://sonarcloud.io/dashboard?id=Valyo95_card-cost-service&branch=master)
