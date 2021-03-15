@@ -1,10 +1,10 @@
 # Card Cost Service
 
 ## Introduction
-**Card Cost Service** is an application that provides with two functionalities:
+The **Card Cost Service** is an application that provides with main two functionalities:
 * a REST CRUD operation for the Country Clearing Cost
 * a Service which can be given with a card number that will utilize the information
-  provided by this public API [BinList](https://binlist.net/)
+  provided by the public [BinList API](https://binlist.net/)
 
 ### Tools used
 * Java 11
@@ -25,10 +25,11 @@
 The **Card Cost Service** provides with a simple CRUD operation for creating, retrieving, updating and deleting
 a [CountryClearingCost](src/main/java/com/valyo95/microservices/cardcostservice/entity/CountryClearingCost.java) records.
 
+The Country Clearing Cost objects consists of the following:
 ```
 CountryClearingCost {
   - countryCode : an ISO 3166-1 alpha-2 code (two-letter country code)
-  - cost        : Positive decimal that show the clearing cost of the country
+  - cost        : Non-negative decimal that show the clearing cost of the country
 }
 ```
 
@@ -43,16 +44,19 @@ This means that:
   (the validation uses the Java's Locale.getISOCountries()) to fetch all the country codes and check if the given **country code**
   is  valid one (see [CountryValidator.java](src/main/java/com/valyo95/microservices/cardcostservice/validators/CountryValidator.java)).
   Also the country code is not case sensitive, so `GR` and `gr` is exactly the same for the CRUD's behaviour.
-* **cost** - should be a zero or positive decimal number
+* **cost** - should be a non-negative decimal number
 
-A set of records is automatically loaded into the database when the application starts by using flyway migration
+If any field in the request is not valid an error message is returned.
+
+A set of pre-configured records is automatically loaded into the database when the application starts by using flyway's
+migration mechanism. There values are:
 
 | Card issuing country | Clearing Cost |
 |----------------------|---------------|
 | US                   | 5             |
 | GR                   | 15            |
 
-The endpoint can be found under the `/country-cost` path.
+The CRUD endpoint can be found under the `/country-cost` path.
 
 #### Default Clearing Cost Value
 There also exists a default clearing cost value for all the other countries that are not configured in the database.
@@ -62,11 +66,12 @@ by the `card-cost.defaultClearingCost` property. This means that it can be pre-c
 
 In a production environment restarting the whole server in order to change the default clearing cost value is not feasible.
 
-That's why a special endpoint is available only to the users with the `ADMIN` role.
-It can be found under `/admin/defaultClearingCost` and requires a `POST` with the following JSON structure
+That's why a special endpoint is available only to the users with the `ADMIN` role, that enables changing the default
+clearing cost value.
+It can be found under `/admin/defaultClearingCost` and requires a `POST` call with the following JSON body to set the new value.
 ```json
 {
-  "cost" : "127"
+  "cost" : <non-negative decimal>
 }
 ```
 
@@ -83,8 +88,13 @@ These identify the institution that issued the card to the card holder.
 #### Implementation
 
 The **Card Cost Service** takes a PAN, extracts the BIN number,
-calls the public [Binlist API](https://binlist.net/) to get the Bin information result and calculates the clearing cost
-of the card.
+calls the public [Binlist API](https://binlist.net/) to get the Bin information result and get's the card's origin country(alpha 2 iso code).
+
+Then it calculates the clearing cost of the card by simply looking in the DB to find the clearing cost of the PAN's country.
+If a **Country Clearing Cost** record is found then it returns it, otherwise it returns the default clearing cost value.  
+
+In order to get the Bin Lookup Response schema I've used [jsonschema2pojo](http://www.jsonschema2pojo.org/) instead of
+manually creating the Java POJO classes.
 
 The card clearing cost calculation is depicted in the following diagram:
 ![card-cost-diagram](docs/card-cost-api.jpg)
@@ -104,10 +114,12 @@ should respond with a response
 }
 ```
 
----
+The `card_number` request body is also validated to be a valid card number or exactly 16 digits.
+Otherwise an error is message is returned.
+
 The BIN information obviously doesn't change frequently. This can be used to reduce the number of calls to the Binlist API.
 
-The **Card Cost Service** does this by caching the Bin Response by using [Spring Cache](https://docs.spring.io/spring-framework/docs/4.3.x/spring-framework-reference/html/cache.html)
+The **Card Cost Service** does this by caching the Bin Response by using [Spring Cache](https://docs.spring.io/spring-framework/docs/4.3.x/spring-framework-reference/html/cache.html).
 
 The cache is set to be cleared each day but the specific interval is configurable and can be changed by the user
 by overwriting the `binlist.api.clearBinCacheInterval` property in the [application.yml](src/main/resources/application.yml).
@@ -129,10 +141,10 @@ They are used in order to create the db schema and load the initial data into th
 ## Error Handling
 The application uses Exception Handling with Spring for the REST API.
 
-There are twp different Exception Handlers defined.
+There are two different Exception Handlers defined.
 
 One for the validation exceptions which produce more user-friendly error message and one for
-all other exceptions. More info can be found here: [ExceptionHandlers.java](src/main/java/com/valyo95/microservices/cardcostservice/handlers/ExceptionHandlers.java)
+all other exceptions. More info can be found here: [ExceptionHandlers.java](src/main/java/com/valyo95/microservices/cardcostservice/handlers/ExceptionHandlers.java).
 
 A special domain class called **ErrorDetails** is created for handling error which is returned in the response.
 The ErrorDetails contains the following field:
@@ -151,6 +163,8 @@ ErrorDetails {
 The **Card Cost Service** is secured by the [Spring Security](https://spring.io/projects/spring-security) and required
 a basic authentication that uses a *username* and a *password* to authenticate.
 
+Every call and request to the Application should be authorized or an error with the status `401 Unauthorized` is returned.
+
 Two default users are programmatically configured:
 
 | username | password | role  |
@@ -163,21 +177,26 @@ For more info check the [SecurityConfig.java](src/main/java/com/valyo95/microser
 ---
 
 ## Unit & Integration Testing
-Both unit & integration test are written in order to ensure the correct business logic and code execution.
+Multiple unit & integration test are written in order to ensure the correct business logic and code execution.
+The cover over 90% of the application's code.
 
-They are added in the CI/CD GitHub Action's pipeline as seperate steps to ensure that a Green Builds does not have broken tests.
+The tests are added in the CI/CD GitHub Action's pipeline as separate steps and if any test fail then the build will fail.
 
 The [JaCoCo](https://www.eclemma.org/jacoco/) library is being used to produce a test coverage report
 for both unit and integration test and merge the two reports into one final report.
 
-This report is later used in the Static Code Analysis in order to pass the Sonar's project Quality Gates.
+This report is later used in the Static Code Analysis phase in order to pass the Sonar's project Quality Gates.
+
+---
 
 ## Containerization and docker-environment
-Each time the application is built a Docker image is created
+Each time the application is built a Docker image is created.
 The app is configured to produce a docker image by using the [dockerfile-maven-plugin](https://github.com/spotify/dockerfile-maven),
 that can be used to run the app directly.
 
 There also exists a [docker-compose](docker-compose.yml) environment to make this process even easier.
+
+---
 
 ## OpenApi - Swagger documentation
 Documentation is an essential part of building REST APIs.
@@ -187,6 +206,8 @@ OpenAPI 3 specification docs for the Rest API.
 
 Once the application is started you can find the documentation under `/swagger-ui.html` and it will display something like this
 ![open-api-docs](docs/open-api-docs.png)
+
+---
 
 ## GitHub Actions CI/CD
 The project has its own pipeline configured with the [GitHub Actions](https://github.com/features/actions).
