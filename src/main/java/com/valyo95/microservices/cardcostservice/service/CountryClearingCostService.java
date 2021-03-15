@@ -15,7 +15,9 @@ import java.util.List;
 @Service
 public class CountryClearingCostService {
 
-    private final String COUNTRY_COST_NOT_FOUND = "Country clearing cost not found for country code: ";
+    private final static String COUNTRY_COST_NOT_FOUND = "Country clearing cost not found for country code: ";
+    private final CountryClearingCost.CountryClearingCostBuilder countryClearingCostBuilder = CountryClearingCost.builder();
+
     @Value("${card-cost.defaultClearingCost}")
     private BigDecimal defaultClearingCost;
 
@@ -26,8 +28,7 @@ public class CountryClearingCostService {
     }
 
     public CountryClearingCost saveCountryClearingCost(CountryClearingCostDTO countryClearingCostDTO) {
-        CountryClearingCost countryClearingCost = new CountryClearingCost()
-                .builder()
+        CountryClearingCost countryClearingCost = countryClearingCostBuilder
                 .countryCode(countryClearingCostDTO.getCountryCode())
                 .cost(countryClearingCostDTO.getCost())
                 .build();
