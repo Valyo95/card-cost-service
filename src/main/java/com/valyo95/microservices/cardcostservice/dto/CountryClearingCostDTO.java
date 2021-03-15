@@ -7,9 +7,7 @@ import javax.validation.constraints.DecimalMin;
 import java.math.BigDecimal;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
 @ToString
 public class CountryClearingCostDTO {
     @Country

@@ -24,7 +24,7 @@ public class CountryClearingCost {
     @Country
     private String countryCode;
 
-    @DecimalMin(value = "0.0")
+    @DecimalMin("0.0")
     @Column(name = "cost")
     private BigDecimal cost;
 
